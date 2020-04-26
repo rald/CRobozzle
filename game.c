@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 	int numCommands=22;
 	int command;
 	
-	int commandIndex=10;
+	int commandIndex=18;
 
 	int stack[STACK_MAX];
 
