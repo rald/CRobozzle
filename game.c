@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 	Function functions[FUNCTIONS_MAX];
 	int numFunctions=0;
 
-	int commands[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,24};
+	int commands[]={0,1,2,3,4,5,6,7,8,9,13,14,15,16,17,18,19,20,10,11,12,24};
 	int numCommands=22;
 	int command;
 	
@@ -469,62 +469,66 @@ int main(int argc, char **argv) {
 			code=functions[currentFunctionIndex].commands[currentCommandIndex].code;
 			color=functions[currentFunctionIndex].commands[currentCommandIndex].color;
 
-			if(code!=-1 && color!=-1) {
+			if(board[player.y][player.x].color==4) isPlay=false;
 
-				if(color==board[player.y][player.x].color || color==3) {
+			if(isPlay) {						
 
-					if(code>=0 && code<=9) {
+				if(code!=-1 && color!=-1) {
 
-						int v1=push(stack,currentFunctionIndex);
-						int v2=push(stack,currentCommandIndex+1);
+					if(color==board[player.y][player.x].color || color==3) {
+
+						if(code>=0 && code<=9) {
+
+							int v1=push(stack,currentFunctionIndex);
+							int v2=push(stack,currentCommandIndex+1);
+							if(!v1 || !v2) {
+								isPlay=false;
+							}
+							
+							currentFunctionIndex=code;
+							currentCommandIndex=-1;
+							
+						} else if(code==10) {
+						
+							switch(player.heading) {
+					 			case 0: player.x--; break;
+					 			case 1: player.y--; break;
+					 			case 2: player.x++; break;
+					 			case 3: player.y++; break;										
+							}
+
+							if(player.x<0) { player.x=0; isPlay=false; }
+							if(player.y<0) { player.y=0; isPlay=false; }
+							if(player.x>BOARD_WIDTH_MAX-1) { player.x=BOARD_WIDTH_MAX-1; isPlay=false; }
+							if(player.y>BOARD_HEIGHT_MAX-1) { player.y=BOARD_HEIGHT_MAX-1; isPlay=false; }
+
+
+						} else if(code==11) {
+							player.heading=player.heading-1<0?3:player.heading-1;
+						} else if(code==12) {
+							player.heading=player.heading+1>3?0:player.heading+1;
+						} else if(code>=13 && code<=16) {
+							board[player.y][player.x].color=code-13;
+						}
+						
+					}
+
+				}
+
+				if(isPlay) {
+					currentCommandIndex++;
+					if(currentCommandIndex>functions[currentFunctionIndex].numCommands-1) {
+						int v1=pop(stack,&currentCommandIndex);
+						int v2=pop(stack,&currentFunctionIndex);
 						if(!v1 || !v2) {
 							isPlay=false;
 						}
-						
-						currentFunctionIndex=code;
-						currentCommandIndex=-1;
-						
-					} else if(code==10) {
-					
-						switch(player.heading) {
-				 			case 0: player.x--; break;
-				 			case 1: player.y--; break;
-				 			case 2: player.x++; break;
-				 			case 3: player.y++; break;										
-						}
-
-						if(player.x<0) { player.x=0; isPlay=false; }
-						if(player.y<0) { player.y=0; isPlay=false; }
-						if(player.x>BOARD_WIDTH_MAX-1) { player.x=BOARD_WIDTH_MAX-1; isPlay=false; }
-						if(player.y>BOARD_HEIGHT_MAX-1) { player.y=BOARD_HEIGHT_MAX-1; isPlay=false; }
-
-
-					} else if(code==11) {
-						player.heading=player.heading-1<0?3:player.heading-1;
-					} else if(code==12) {
-						player.heading=player.heading+1>3?0:player.heading+1;
-					} else if(code>=13 && code<=16) {
-						board[player.y][player.x].color=code-13;
 					}
-					
-				} else if(color==4) {
-					isPlay=false;
+					glfwSleep(0.0625);
 				}
 
 			}
 
-
-			currentCommandIndex++;
-			if(currentCommandIndex>functions[currentFunctionIndex].numCommands-1) {
-				int v1=pop(stack,&currentCommandIndex);
-				int v2=pop(stack,&currentFunctionIndex);
-				if(!v1 || !v2) {
-					isPlay=false;
-				}
-			}
-
-			glfwSleep(0.125);			
-			
 		}
 
 		if(isCode) {
@@ -589,8 +593,8 @@ int main(int argc, char **argv) {
 			}
 
 			for(i=0;i<numCommands-10;i++) {
-				x=(i%10+1)*32;
-				y=(i/10+j+2)*32;
+				x=(i%4+1)*32;
+				y=(i/4+j+2)*32;
 				glSprite(x,y,GL2D_FLIP_NONE,&image_sprites[commands[i+10]]);				
 
 				if(	glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS && 
