@@ -10,7 +10,7 @@
 
 #include "uvcoord_sprites.h"
 
-#define GAME_TITLE "Siesta's Robozzle" 
+#define GAME_TITLE "CRobozzle" 
 
 #define SPRITE_SIZE 32
 
