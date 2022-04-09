@@ -13,14 +13,21 @@ running ./compile.sh, to aid debugging if ./compile.sh makes a mistake.
 ./compile.sh: cc -o conftest  -pthread conftest.c  1>&5
 ./compile.sh: Checking for glXGetProcAddress variants
 ./compile.sh: cc -o conftest  -pthread conftest.c  -lGL -pthread 1>&5
+conftest.c:4:48: warning: passing 'char [6]' to parameter of type 'const GLubyte *' (aka 'const unsigned char *') converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+int main() {void *ptr=(void*)glXGetProcAddress("glFun"); return 0;}
+                                               ^~~~~~~
+/data/data/com.termux/files/usr/include/GL/glx.h:320:48: note: passing argument to parameter 'procname' here
+extern void (*glXGetProcAddress(const GLubyte *procname))( void );
+                                               ^
+1 warning generated.
 ./compile.sh: Checking for sysconf
 ./compile.sh: cc -o conftest  -pthread conftest.c  -lGL -pthread 1>&5
 ./compile.sh: Checking for sysctl support
 ./compile.sh: cc -E conftest.c
-In file included from conftest.c:2:
-/usr/include/sys/sysctl.h:21:2: warning: #warning "The <sys/sysctl.h> header is deprecated and will be removed." [-Wcpp]
-   21 | #warning "The <sys/sysctl.h> header is deprecated and will be removed."
-      |  ^~~~~~~
+conftest.c:2:10: fatal error: 'sys/sysctl.h' file not found
+#include <sys/sysctl.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
 ./compile.sh: Creating ./lib/x11/Makefile.x11
 ./compile.sh: Creating ./examples/Makefile.x11
 ./compile.sh: Creating ./tests/Makefile.x11

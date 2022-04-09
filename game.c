@@ -5,8 +5,8 @@
 #include <math.h>
 #include <time.h>
 
-#include <GL/glfw.h>
-#include <GL/gl2d.h>
+#include  <GL/glfw.h>
+#include  "gl2d.h"
 
 #include "uvcoord_sprites.h"
 
